@@ -1,24 +1,20 @@
-﻿namespace ZhetistikApp.Api.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ZhetistikApp.Api.Models
 {
+    [Table("Achievements")]
     public class Achievement
     {
+        [Key]
         public int AchievementID { get; set; }
-        public string AchievementName { get; set; }
-
+        public int AchievementTypeID { get; set; }
         public int? Score { get; set; }
-
-        public string Image { get; set; }
+        public byte[] Image { get; set; }
+        public string URL { get; set; }
         public Achievement()
         {
 
-        }
-
-        public Achievement(int achievementID, string achievementName, int? score, string image)
-        {
-            AchievementID = achievementID;
-            AchievementName = achievementName;
-            Score = score;
-            Image = image;
         }
     }
 }

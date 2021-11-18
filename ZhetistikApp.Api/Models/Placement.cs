@@ -7,8 +7,8 @@ namespace ZhetistikApp.Api.Models
     public class Placement
     {
         [Key]
-        public long PlacementID { get; set; }
-        public long CountryID { get; set; }
-        public long CityID { get; set; }
+        public int PlacementID { get; set; }
+        public int CountryID { get; set; }
+        public int CityID { get; set; }
     }
 }

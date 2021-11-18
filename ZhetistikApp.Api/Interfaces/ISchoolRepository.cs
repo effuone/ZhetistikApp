@@ -11,13 +11,13 @@ namespace ZhetistikApp.Api.Interfaces
         //CREATE school 
         //UPDATE school
         //DELETE school
-        Task<School> GetSchoolByIdAsync(long id);
+        Task<School> GetSchoolByIdAsync(int id);
         Task<School> GetSchoolByNameAsync(string schoolName);
         Task<IEnumerable<School>> GetAllSchoolsAsync();
         Task<IEnumerable<School>> GetSchoolsByPlacementAsync();
         Task<IEnumerable<School>> GetSchoolsByYearAsync(int year);
-        Task<long> CreateSchoolAsync(School school);
+        Task<int> CreateSchoolAsync(School school);
         Task UpdateSchoolAsync(School school);
-        Task DeleteSchoolAsync(long id);
+        Task DeleteSchoolAsync(int id);
     }
 }

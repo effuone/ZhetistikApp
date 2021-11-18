@@ -7,7 +7,7 @@ namespace ZhetistikApp.Api.Models
     public class AchievementType
     {
         [Key]
-        public long AchievementTypeID { get; set; }
+        public int AchievementTypeID { get; set; }
         public string AchievementTypeName { get; set; }
     }
 }

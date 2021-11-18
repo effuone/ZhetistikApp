@@ -7,12 +7,12 @@ namespace ZhetistikApp.Api.Models
     public class University
     {
         [Key]
-        public long UniversityID { get; set; }
+        public int UniversityID { get; set; }
         public string UniversityName { get; set; }
         public string UniversityDescription { get; set; }
-        public long PlacementID { get; set; }
+        public int PlacementID { get; set; }
         public DateOnly FoundationYear { get; set; }
-        public long UniversityTypeID { get; set; }
+        public int UniversityTypeID { get; set; }
         public int StudentsCount { get; set; }
 
     }

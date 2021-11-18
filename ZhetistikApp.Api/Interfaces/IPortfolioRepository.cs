@@ -11,12 +11,12 @@ namespace ZhetistikApp.Api.Interfaces
         //CREATE portfolio
         //UPDATE portfolio
         //DELETE portfolio
-        public Task<Portfolio> GetPortfolioByIdAsync(long id);
+        public Task<Portfolio> GetPortfolioByIdAsync(int id);
         public Task<Portfolio> GetPortfolioByPersonAsync(string firstName, string lastName);
         public Task<IEnumerable<Portfolio>> GetPublishedPortfolios(bool isPublished);
         public Task<IEnumerable<Portfolio>> GetPortfoliosByLocationAsync(string countryName, string cityName);
-        public Task<long> CreatePortfolioAsync(Portfolio portfolio);
-        public Task DeletePortfolioAsync(long id);
+        public Task<int> CreatePortfolioAsync(Portfolio portfolio);
+        public Task DeletePortfolioAsync(int id);
         public Task UpdatePortfolioAsync(Portfolio portfolio);
     }
 }

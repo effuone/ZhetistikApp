@@ -10,12 +10,12 @@ namespace ZhetistikApp.Api.Interfaces
         //CREATE candidate
         //UPDATE candidate
         //DELETE candidate
-        Task<Candidate> GetCandidateByIdAsync(long id);
-        Task<Candidate> GetCandidateByUserIdAsync(long userId);
+        Task<Candidate> GetCandidateByIdAsync(int id);
+        Task<Candidate> GetCandidateByUserIdAsync(int userId);
         Task<Candidate> GetCandidateByName(string firstName, string lastName);
         Task<IEnumerable<Candidate>> GetAllCandidatesAsync();
-        Task<long> CreateCandidate(Candidate candidate);
+        Task<int> CreateCandidate(Candidate candidate);
         Task UpdateCandidateAsync(Candidate candidate);
-        Task DeleteCandidateAsync(long id);
+        Task DeleteCandidateAsync(int id);
     }
 }

@@ -11,12 +11,12 @@ namespace ZhetistikApp.Api.Interfaces
         //CREATE course
         //UPDATE course
         //DELETE course
-        Task<Faculty> GetFacultyAsync(long id);
+        Task<Faculty> GetFacultyAsync(int id);
         Task<IEnumerable<Faculty>> GetFacultiesByNameAsync(string facultyName);
         Task<IEnumerable<Faculty>> GetAllFacultiesAsync();
-        Task<IEnumerable<Faculty>> GetFacultiesByUniversityAsync(long universityId);
-        Task<long> CreateFacultyAsync(Faculty faculty);
-        Task DeleteFacultyAsync(long id);
+        Task<IEnumerable<Faculty>> GetFacultiesByUniversityAsync(int universityId);
+        Task<int> CreateFacultyAsync(Faculty faculty);
+        Task DeleteFacultyAsync(int id);
         Task UpdateFacultyAsync(Faculty faculty);
     }
 }

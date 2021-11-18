@@ -7,9 +7,9 @@ namespace ZhetistikApp.Api.Models
     public class Faculty
     {
         [Key]
-        public long FacultyID { get; set; }
+        public int FacultyID { get; set; }
         public string FacultyName { get; set; }
-        public long CourseID { get; set; }
-        public long UniversityID { get; set; }
+        public int CourseID { get; set; }
+        public int UniversityID { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ZhetistikApp.Api.Models
     {
         [Key]
         public int CandidateID { get; set; }
-        public long UserID { get; set; }
+        public int UserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }

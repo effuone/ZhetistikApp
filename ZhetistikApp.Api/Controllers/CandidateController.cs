@@ -17,7 +17,7 @@ namespace ZhetistikApp.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCandidatesAsync()
+        public async Task<ActionResult<CandidateDTO>> GetAllCandidatesAsync()
         {
             try
             {
@@ -30,7 +30,7 @@ namespace ZhetistikApp.Api.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCandidate(int id)
+        public async Task<ActionResult> GetCandidate(int id)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace ZhetistikApp.Api.Controllers
             }
         }
         [HttpGet("{firstName}+{lastName}")]
-        public async Task<IActionResult> GetCandidateByName(string firstName, string lastName)
+        public async Task<ActionResult> GetCandidateByName(string firstName, string lastName)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace ZhetistikApp.Api.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> CreateCandidate(CreateCandidateDTO candidateDTO)
+        public async Task<ActionResult> CreateCandidate(CreateCandidateDTO candidateDTO)
         {
             Candidate candidate = new() 
             { 
@@ -84,7 +84,7 @@ namespace ZhetistikApp.Api.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCandidate(int id, UpdateCandidateDTO candidate)
+        public async Task<ActionResult> UpdateCandidate(int id, UpdateCandidateDTO candidate)
         {
             var newCandidate = new Candidate();
             newCandidate.CandidateID = id;

@@ -11,7 +11,6 @@ namespace ZhetistikApp.Api.Interfaces
         //UPDATE candidate
         //DELETE candidate
         Task<Candidate> GetCandidateByIdAsync(int id);
-        Task<Candidate> GetCandidateByUserIdAsync(int userId);
         Task<Candidate> GetCandidateByName(string firstName, string lastName);
         Task<IEnumerable<Candidate>> GetAllCandidatesAsync();
         Task<int> CreateCandidate(Candidate candidate);

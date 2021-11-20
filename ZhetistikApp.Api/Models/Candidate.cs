@@ -19,5 +19,16 @@ namespace ZhetistikApp.Api.Models
         {
 
         }
+
+        public Candidate(int candidateID, int userID, string firstName, string lastName, DateTime birthday, string email, string phoneNumber)
+        {
+            CandidateID = candidateID;
+            UserID = userID;
+            FirstName = firstName;
+            LastName = lastName;
+            Birthday = birthday;
+            Email = email;
+            PhoneNumber = phoneNumber;
+        }
     }
 }

@@ -87,8 +87,8 @@ namespace ZhetistikApp.Api.Repositories
             var query = "SELECT por.PortofolioID, por.CandidateID, por.PlacementID, por.AchievementID, por.IsPublished, por.CreatedDate " +
                 "FROM Portfolios as por, Placements as plac " +
                 "WHERE por.PlacementID = plac.PlacementID " +
-                "AND plac.CityID = (SELECT c.CityID FROM Cities as c WHERE CityName = @cityName) " +
-                "AND plac.CountryID = (SELECT c.CountryID FROM Countries as c WHERE c.CountryName = @countryName)";
+                "AND plac.CityID = (SELECT c.CityID FROM Cities as c WHERE CityName = @cityName and CountryID = " +
+                "(SELECT co.CountryID FROM Countries as co WHERE co.CountryName = @countryName)) ";
 
             using (var connection = _context.CreateConnection())
             {

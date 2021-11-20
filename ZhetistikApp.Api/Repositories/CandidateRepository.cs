@@ -57,34 +57,54 @@ namespace ZhetistikApp.Api.Repositories
 
         public async Task<Candidate> GetCandidateByIdAsync(int id)
         {
-            var query = $"SELECT* FROM Candidates WHERE CandidateID = {id}";
+            var query = $"SELECT* FROM Candidates WHERE CandidateID = @id";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
-                var candidates = await connection.QueryAsync<Candidate>(query);
-                return candidates.FirstOrDefault();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", id));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                return new Candidate(
+                    (int)reader[0],
+                    (int)reader[1],
+                    (string)reader[2],
+                    (string)reader[3],
+                    (DateTime)reader[4],
+                    (string)reader[5],
+                    (string)reader[6]
+                );
             }
         }
 
         public async Task<Candidate> GetCandidateByName(string firstName, string lastName)
         {
-            var query = $"SELECT * FROM Candidates WHERE FirstName = '{firstName}' and LastName = '{lastName}' ";
+            var query = $"SELECT * FROM Candidates WHERE FirstName = @firstName and LastName = @lastName";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
-                var candidates = await connection.QueryAsync<Candidate>(query);
-                return candidates.FirstOrDefault();
-            }
-        }
-
-        public async Task<Candidate> GetCandidateByUserIdAsync(int userId)
-        {
-            var query = $"SELECT* FROM Candidates WHERE UserID = {userId}";
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var candidates = await connection.QueryAsync<Candidate>(query);
-                return candidates.FirstOrDefault();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@firstName", firstName));
+                command.Parameters.Add(new SqlParameter("@lastName", lastName));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                return new Candidate(
+                    (int)reader[0],
+                    (int)reader[1],
+                    (string)reader[2],
+                    (string)reader[3],
+                    (DateTime)reader[4],
+                    (string)reader[5],
+                    (string)reader[6]
+                );
             }
         }
 

@@ -4,7 +4,6 @@ namespace ZhetistikApp.Api.DTOs.Candidate
 {
     public record CandidateDTO(
     long candidateID, 
-    long userID ,
     string firstName,
     string lastName,
     DateTime birthday,
@@ -12,7 +11,6 @@ namespace ZhetistikApp.Api.DTOs.Candidate
     string phoneNumber 
     );
     public record CreateCandidateDTO(
-    [Required]int userID,
     [Required] string firstName,
     [Required] string lastName,
     [Required] DateTime birthday,
@@ -21,8 +19,6 @@ namespace ZhetistikApp.Api.DTOs.Candidate
     );
     public class UpdateCandidateDTO
     {
-        [Required]
-        public int UserID { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]

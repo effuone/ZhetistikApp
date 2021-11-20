@@ -9,5 +9,11 @@ namespace ZhetistikApp.Api.Models
         [Key]
         public int CountryID { get; set; }
         public string CountryName { get; set; }
+
+        public Country(int countryID, string countryName)
+        {
+            CountryID = countryID;
+            CountryName = countryName;
+        }
     }
 }

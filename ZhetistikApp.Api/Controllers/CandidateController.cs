@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZhetistikApp.Api.DTOs.Candidate;
+using ZhetistikApp.Api.DTOs;
 using ZhetistikApp.Api.Interfaces;
 using ZhetistikApp.Api.Models;
 
@@ -10,105 +11,79 @@ namespace ZhetistikApp.Api.Controllers
     public class CandidateController : ControllerBase
     {
         private readonly ICandidateRepository _candidateRepository;
+        private readonly ILogger<CandidateController> _logger;
 
-        public CandidateController(ICandidateRepository candidateRepository)
+        public CandidateController(ICandidateRepository candidateRepository, ILogger<CandidateController> logger)
         {
             _candidateRepository = candidateRepository;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<CandidateDTO>> GetAllCandidatesAsync()
+        public async Task<IEnumerable<CandidateDTO>> GetAllCandidatesAsync()
         {
-            try
-            {
-                var candidates = await _candidateRepository.GetAllCandidatesAsync();
-                return Ok(candidates);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var candidates = (await _candidateRepository.GetAllCandidatesAsync()).Select(x => x.AsDto());
+            _logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")} : Retrieved {candidates.Count()} candidates");
+            return candidates;
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCandidate(int id)
+        public async Task<ActionResult<CandidateDTO>> GetCandidateAsync(int id)
         {
-            try
+            var candidate = await _candidateRepository.GetCandidateByIdAsync(id);
+            if (candidate is null)
             {
-                var candidate = await _candidateRepository.GetCandidateByIdAsync(id);
-                if (candidate is null)
-                {
-                    return NotFound();
-                }
-                return Ok(candidate);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return candidate.AsDto();
         }
         [HttpGet("{firstName}+{lastName}")]
-        public async Task<ActionResult> GetCandidateByName(string firstName, string lastName)
+        public async Task<ActionResult<CandidateDTO>> GetCandidateByNameAsync(string firstName, string lastName)
         {
-            try
-            {
-                var candidate = await _candidateRepository.GetCandidateByName(firstName, lastName);
-                if (candidate is null)
-                    return NotFound();
-                return Ok(candidate);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var candidate = await _candidateRepository.GetCandidateByName(firstName, lastName);
+            if (candidate is null)
+                return NotFound();
+            return candidate.AsDto();
         }
         [HttpPost]
-        public async Task<ActionResult> CreateCandidate(CreateCandidateDTO candidateDTO)
+        public async Task<ActionResult<CandidateDTO>> CreateCandidateAsync(CreateCandidateDTO candidateDTO)
         {
             Candidate candidate = new() 
             { 
-                UserID = candidateDTO.userID, 
                 FirstName = candidateDTO.firstName, 
                 LastName = candidateDTO.lastName, 
                 Birthday = candidateDTO.birthday, 
                 Email = candidateDTO.email, 
                 PhoneNumber = candidateDTO.phoneNumber };
 
-            try
-            {
-                candidate.CandidateID = await _candidateRepository.CreateCandidate(candidate);
-                return Ok(candidate);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            candidate.CandidateID = await _candidateRepository.CreateCandidate(candidate);
+            return CreatedAtAction(nameof(GetCandidateAsync), new { id = candidate.CandidateID }, candidate.AsDto());
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateCandidate(int id, UpdateCandidateDTO candidate)
         {
+            var existingCandidate = await _candidateRepository.GetCandidateByIdAsync(id);
+            if (existingCandidate is null)
+            {
+                return NotFound();
+            }
             var newCandidate = new Candidate();
             newCandidate.CandidateID = id;
-            newCandidate.UserID = candidate.UserID;
             newCandidate.LastName = candidate.LastName;
             newCandidate.FirstName = candidate.FirstName;
             newCandidate.Birthday = candidate.Birthday;
             newCandidate.Email = candidate.Email;
             newCandidate.PhoneNumber = candidate.PhoneNumber;
             await _candidateRepository.UpdateCandidateAsync(id, newCandidate);
-            return Ok(candidate);
-            //try
-            //{
-            //    await _candidateRepository.UpdateCandidateAsync(id, newCandidate);
-            //    return Ok(candidate);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, ex.Message);
-            //}
+            return NoContent();
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCandidate(int id)
         {
+            var existingCandidate = await _candidateRepository.GetCandidateByIdAsync(id);
+            if (existingCandidate is null)
+            {
+                return NotFound();
+            }
             await _candidateRepository.DeleteCandidateAsync(id);
             return NoContent();
         }

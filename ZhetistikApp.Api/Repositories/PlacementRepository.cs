@@ -1,4 +1,7 @@
-﻿using ZhetistikApp.Api.DataAccess;
+﻿using Dapper;
+using System.Data;
+using System.Data.SqlClient;
+using ZhetistikApp.Api.DataAccess;
 using ZhetistikApp.Api.Interfaces;
 using ZhetistikApp.Api.Models;
 
@@ -13,74 +16,289 @@ namespace ZhetistikApp.Api.Repositories
             _context = context;
         }
 
-        public Task<int> CreateCityAsync(Country country)
+        public async Task<int> CreateCityAsync(City city)
         {
-            throw new NotImplementedException();
+            string sql = @"INSERT INTO Cities (CountryID, CityName, PostalCode)
+            VALUES (@countryId, @cityName, @postalCode) SET @CityID = SCOPE_IDENTITY();";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@countryID", city.CountryID));
+                command.Parameters.Add(new SqlParameter("@cityName", city.CityName));
+                command.Parameters.Add(new SqlParameter("@postalCode", city.PostalCode));
+
+                var outputParam = new SqlParameter
+                {
+                    ParameterName = "@CityID",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outputParam);
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
+                return (int)outputParam.Value;
+            }
         }
 
-        public Task<int> CreateCountryAsync(Country country)
+        public async Task<int> CreateCountryAsync(Country country)
         {
-            throw new NotImplementedException();
+            string sql = @"INSERT INTO Countries (CountryName)
+            VALUES (@countryName) SET @CountryID = SCOPE_IDENTITY();";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@countryName", country.CountryName));
+
+                var outputParam = new SqlParameter
+                {
+                    ParameterName = "@CountryID",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outputParam);
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
+                return (int)outputParam.Value;
+            }
         }
 
-        public Task<int> CreatePlacementAsync(Placement placement)
+        public async Task<int> CreatePlacementAsync(Placement placement)
         {
-            throw new NotImplementedException();
+            string sql = @"INSERT INTO Placements (CityID)
+            VALUES (@cityId) SET @PlacementID = SCOPE_IDENTITY();";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@cityId", placement.CityID));
+
+                var outputParam = new SqlParameter
+                {
+                    ParameterName = "@PlacementID",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outputParam);
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
+                return (int)outputParam.Value;
+            }
         }
 
-        public Task DeleteCityAsync(int id)
+        public async Task<bool> DeleteCityAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                string sql = "DELETE FROM Cities WHERE CityID = @id";
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", id));
+                int rows = await command.ExecuteNonQueryAsync();
+                connection.Close();
+                if (rows == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
-        public Task DeleteCountryAsync(int id)
+        public async Task<bool> DeleteCountryAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                string sql = "DELETE FROM Countries WHERE CountryID = @id";
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", id));
+                int rows = await command.ExecuteNonQueryAsync();
+                connection.Close();
+                if (rows == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
-        public Task DeletePlacementAsync(int id)
+        public async Task<bool> DeletePlacementAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                string sql = "DELETE FROM Placements WHERE PlacementID = @id";
+                connection.Open();
+                var command = new SqlCommand(sql, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", id));
+                int rows = await command.ExecuteNonQueryAsync();
+                connection.Close();
+                if (rows == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
-        public Task<Placement> GetCityAsync(int cityId)
+        public async Task<City> GetCityAsync(int cityId)
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Cities WHERE CityID = @id";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", cityId));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                connection.Close();
+                return new City(
+                    (int)reader[0],
+                    (int)reader[1],
+                    (string)reader[2],
+                    (string)reader[3]
+                );
+            }
         }
 
-        public Task<Placement> GetCountryAsync(int countryId)
+        public async Task<Country> GetCountryAsync(int countryId)
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Countries WHERE CityID = @id";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", countryId));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                connection.Close();
+                return new Country(
+                    (int)reader[0],
+                    (string)reader[1]
+                );
+            }
         }
 
-        public Task<Placement> GetPlacementAsync(int placementId)
+        public async Task<Placement> GetPlacementAsync(int placementId)
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Placements WHERE PlacementID = @id";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", placementId));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                connection.Close();
+                return new Placement(
+                    (int)reader[0],
+                    (int)reader[1]
+                );
+            }
         }
 
-        public Task<Placement> GetPlacementAsync(string cityName)
+        public async Task<Placement> GetPlacementAsync(string cityName)
         {
-            throw new NotImplementedException();
+            var query = "SELECT pl.PlacementID, pl.CityID" +
+                " FROM Placements as pl, Cities as ct" +
+                " WHERE pl.CityID = ct.CityID and ct.CityName = @cityName";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@cityName", cityName));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                {
+                    return null;
+                }
+                await reader.ReadAsync();
+                connection.Close();
+                return new Placement(
+                    (int)reader[0],
+                    (int)reader[1]
+                );
+            }
         }
 
-        public Task<IEnumerable<Placement>> GetPlacementsAsync()
+        public async Task<IEnumerable<Placement>> GetPlacementsAsync()
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Placements";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var placements = await connection.QueryAsync<Placement>(query);
+                connection.Close();
+                return placements;
+            }
         }
 
-        public Task UpdateCityAsync(int id, Placement placement)
+        public async Task<int> UpdateCityAsync(int id, City city)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var query = 
+                    $"UPDATE Cities " +
+                    $"SET CountryID = {city.CountryID}, " +
+                    $"CityName = '{city.CityName}'," +
+                    $"PostalCode = '{city.CityName}' " +
+                    $"WHERE CityID = {id}";
+                var rows = await connection.ExecuteAsync(query);
+                connection.Close();
+                return rows;
+            }
         }
 
-        public Task UpdateCountryAsync(int id, Placement placement)
+        public async Task<int> UpdateCountryAsync(int id, Country country)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var query =
+                    $"UPDATE Countries " +
+                    $"SET CountryName = {country.CountryName}, " +
+                    $"WHERE CountryID = {id}";
+                var rows = await connection.ExecuteAsync(query);
+                connection.Close();
+                return rows;
+            }
         }
 
-        public Task UpdatePlacementAsync(int id, Placement placement)
+        public async Task<int> UpdatePlacementAsync(int id, Placement placement)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var query =
+                    $"UPDATE Placements " +
+                    $"SET CityID = {placement.CityID}, " +
+                    $"WHERE PlacementID = {id}";
+                var rows = await connection.ExecuteAsync(query);
+                connection.Close();
+                return rows;
+            }
         }
     }
 }

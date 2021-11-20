@@ -1,4 +1,5 @@
 ﻿using ZhetistikApp.Api.DTOs.Candidate;
+using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.DTOs
 {
@@ -8,7 +9,6 @@ namespace ZhetistikApp.Api.DTOs
         {
             return new CandidateDTO(
             candidate.CandidateID,
-            candidate.UserID,
             candidate.FirstName,
             candidate.LastName,
             candidate.Birthday,

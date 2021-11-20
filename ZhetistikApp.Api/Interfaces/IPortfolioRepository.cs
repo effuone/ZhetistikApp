@@ -17,6 +17,6 @@ namespace ZhetistikApp.Api.Interfaces
         public Task<IEnumerable<Portfolio>> GetPortfoliosByLocationAsync(string countryName, string cityName);
         public Task<int> CreatePortfolioAsync(Portfolio portfolio);
         public Task DeletePortfolioAsync(int id);
-        public Task UpdatePortfolioAsync(Portfolio portfolio);
+        public Task UpdatePortfolioAsync(int id, Portfolio portfolio);
     }
 }

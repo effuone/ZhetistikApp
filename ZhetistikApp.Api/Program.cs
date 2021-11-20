@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<ICandidateRepository, CandidateRepository>();
+builder.Services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;

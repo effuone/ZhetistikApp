@@ -29,8 +29,40 @@ namespace ZhetistikApp.Api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCandidate(int id)
+        {
+            try
+            {
+                var candidate = await _candidateRepository.GetCandidateByIdAsync(id);
+                if (candidate is null)
+                {
+                    return NotFound();
+                }
+                return Ok(candidate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpGet("{firstName}+{lastName}")]
+        public async Task<IActionResult> GetCandidateByName(string firstName, string lastName)
+        {
+            try
+            {
+                var candidate = await _candidateRepository.GetCandidateByName(firstName, lastName);
+                if (candidate is null)
+                    return NotFound();
+                return Ok(candidate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost]
-        public async Task<IActionResult> CreateCandidateAsync(CreateCandidateDTO candidateDTO)
+        public async Task<IActionResult> CreateCandidate(CreateCandidateDTO candidateDTO)
         {
             Candidate candidate = new() 
             { 
@@ -50,6 +82,35 @@ namespace ZhetistikApp.Api.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCandidate(int id, UpdateCandidateDTO candidate)
+        {
+            var newCandidate = new Candidate();
+            newCandidate.CandidateID = id;
+            newCandidate.UserID = candidate.UserID;
+            newCandidate.LastName = candidate.LastName;
+            newCandidate.FirstName = candidate.FirstName;
+            newCandidate.Birthday = candidate.Birthday;
+            newCandidate.Email = candidate.Email;
+            newCandidate.PhoneNumber = candidate.PhoneNumber;
+            await _candidateRepository.UpdateCandidateAsync(id, newCandidate);
+            return Ok(candidate);
+            //try
+            //{
+            //    await _candidateRepository.UpdateCandidateAsync(id, newCandidate);
+            //    return Ok(candidate);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, ex.Message);
+            //}
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCandidate(int id)
+        {
+            await _candidateRepository.DeleteCandidateAsync(id);
+            return NoContent();
         }
     }
 }

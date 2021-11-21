@@ -47,13 +47,14 @@ namespace ZhetistikApp.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CandidateDTO>> CreateCandidateAsync(CreateCandidateDTO candidateDTO)
         {
-            Candidate candidate = new() 
-            { 
-                FirstName = candidateDTO.firstName, 
-                LastName = candidateDTO.lastName, 
-                Birthday = candidateDTO.birthday, 
-                Email = candidateDTO.email, 
-                PhoneNumber = candidateDTO.phoneNumber };
+            Candidate candidate = new()
+            {
+                FirstName = candidateDTO.FirstName,
+                LastName = candidateDTO.LastName,
+                Birthday = candidateDTO.Birthday,
+                Email = candidateDTO.Email,
+                PhoneNumber = candidateDTO.PhoneNumber
+            };
 
             candidate.CandidateID = await _candidateRepository.CreateCandidate(candidate);
             return CreatedAtAction(nameof(GetCandidateAsync), new { id = candidate.CandidateID }, candidate.AsDto());

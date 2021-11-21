@@ -3,17 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZhetistikApp.Api.Models
 {
-    [Table("Placements")]
-    public class Placement
+    [Table("Locations")]
+    public class Location
     {
         [Key]
-        public int PlacementID { get; set; }
+        public int LocationID { get; set; }
         public int CityID { get; set; }
+        public int CountryID { get; set; }
+        public int StateID { get; set; }
 
-        public Placement(int placementID, int cityID)
+        public Location(int locationID, int cityID, int countryID, int stateID)
         {
-            PlacementID = placementID;
+            LocationID = locationID;
             CityID = cityID;
+            CountryID = countryID;
+            StateID = stateID;
         }
     }
 }

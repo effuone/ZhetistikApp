@@ -14,7 +14,7 @@ namespace ZhetistikApp.Api.Interfaces
         Task<School> GetSchoolByIdAsync(int id);
         Task<School> GetSchoolByNameAsync(string schoolName);
         Task<IEnumerable<School>> GetAllSchoolsAsync();
-        Task<IEnumerable<School>> GetSchoolsByPlacementAsync();
+        Task<IEnumerable<School>> GetSchoolsByLocationAsync();
         Task<IEnumerable<School>> GetSchoolsByYearAsync(int year);
         Task<int> CreateSchoolAsync(School school);
         Task UpdateSchoolAsync(School school);

@@ -84,8 +84,8 @@ namespace ZhetistikApp.Api.Repositories
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosByLocationAsync(string countryName, string cityName)
         {
-            var query = "SELECT por.PortofolioID, por.CandidateID, por.PlacementID, por.AchievementID, por.IsPublished, por.CreatedDate " +
-                "FROM Portfolios as por, Placements as plac " +
+            var query = "SELECT por.PortofolioID, por.CandidateID, por.LocationID, por.AchievementID, por.IsPublished, por.CreatedDate " +
+                "FROM Portfolios as por, Locations as plac " +
                 "WHERE por.PlacementID = plac.PlacementID " +
                 "AND plac.CityID = (SELECT c.CityID FROM Cities as c WHERE CityName = @cityName and CountryID = " +
                 "(SELECT co.CountryID FROM Countries as co WHERE co.CountryName = @countryName)) ";
@@ -117,14 +117,14 @@ namespace ZhetistikApp.Api.Repositories
                 var command = new SqlCommand(
                     "UPDATE Candidates " +
                     "SET CandidateID = @candidateId, " +
-                    "PlacementID = @placementId," +
+                    "LocationID = @locationId," +
                     "AchievementID = @achievementId, " +
                     "IsPublished = @isPublished, " +
                     "CreatedDate = @createdDate, " +
                     " WHERE CandidateID = @id", (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@id", id));
                 command.Parameters.Add(new SqlParameter("@candidateId", portfolio.CandidateID));
-                command.Parameters.Add(new SqlParameter("@placementId", portfolio.PlacementID));
+                command.Parameters.Add(new SqlParameter("@locationId", portfolio.LocationID));
                 command.Parameters.Add(new SqlParameter("@achievementId", portfolio.AchievementID));
                 command.Parameters.Add(new SqlParameter("@isPublished", portfolio.IsPublished));
                 command.Parameters.Add(new SqlParameter("@createdDate", portfolio.CreatedDate));

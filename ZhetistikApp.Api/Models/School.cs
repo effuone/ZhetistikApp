@@ -8,7 +8,7 @@ namespace ZhetistikApp.Api.Models
     {
         [Key]
         public int SchoolID { get; set; }
-        public int PlacementID { get; set; }
+        public int LocationID { get; set; }
         public string SchoolName { get; set; }
         public DateTime FoundationYear { get; set; }
     }

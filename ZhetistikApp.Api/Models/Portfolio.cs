@@ -9,7 +9,7 @@ namespace ZhetistikApp.Api.Models
         [Key]
         public int PortfolioID { get; set; }
         public int CandidateID { get; set; }
-        public int PlacementID { get; set; }
+        public int LocationID { get; set; }
         public int AchievementID { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsPublished { get; set; }

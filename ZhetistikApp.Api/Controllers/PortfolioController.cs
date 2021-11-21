@@ -64,7 +64,8 @@ namespace ZhetistikApp.Api.Controllers
             Portfolio portfolio = new()
             {
                 CandidateID = portfolioDTO.CandidateID,
-                PlacementID = portfolioDTO.PlacementID,
+                
+                LocationID = portfolioDTO.LocationID,
                 AchievementID = portfolioDTO.AchievementID,
                 IsPublished = portfolioDTO.IsPublished,
                 CreatedDate = portfolioDTO.CreatedDate

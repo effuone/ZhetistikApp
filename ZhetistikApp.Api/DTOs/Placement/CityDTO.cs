@@ -3,14 +3,10 @@
 namespace ZhetistikApp.Api.DTOs.Placement
 {
     public class CityDTO {
-        [Required]
         public int CityID { get; set; }
-        [Required]
         public string CountryName { get; set; }
-        [Required]
+        public string StateName { get; set; }
         public string CityName { get; set; }
-        [Required]
-        public string PostalCode { get; set; }
     }
 
     public class CreateCityDTO
@@ -18,17 +14,17 @@ namespace ZhetistikApp.Api.DTOs.Placement
         [Required]
         public string CountryName { get; set; }
         [Required]
-        public string CityName { get; set; }
+        public string StateName { get; set; }
         [Required]
-        public string PostalCode { get; set; }
+        public string CityName { get; set; }
     }
     public class UpdateCityDTO
     {
         [Required]
         public string CountryName { get; set; }
         [Required]
+        public string StateName { get; set; }
+        [Required]
         public string CityName { get; set; }
-        [Required]        
-        public string PostalCode { get; set; }
     }
 }

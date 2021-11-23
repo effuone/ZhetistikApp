@@ -10,14 +10,17 @@ namespace ZhetistikApp.Api.Models
         public int CityID { get; set; }
         public int CountryID { get; set; }
         public string CityName { get; set; }
-        public string PostalCode { get; set; }
 
-        public City(int cityID, int countryID, string cityName, string postalCode)
+
+        public City(int cityID, int countryID, string cityName)
         {
             CityID = cityID;
             CountryID = countryID;
             CityName = cityName;
-            PostalCode = postalCode;
+        }
+
+        public City()
+        {
         }
     }
 }

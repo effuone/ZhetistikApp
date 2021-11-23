@@ -15,5 +15,9 @@ namespace ZhetistikApp.Api.Models
             CountryID = countryID;
             CountryName = countryName;
         }
+
+        public Country()
+        {
+        }
     }
 }

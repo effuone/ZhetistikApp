@@ -14,57 +14,59 @@ namespace ZhetistikApp.Api.Repositories
         {
             _context = context;
         }
-        public async Task<int> CreateCityAsync(City city)
+
+        public Task<int> CreateCityAsync(City city)
         {
-            string sql = @"INSERT INTO Cities (CountryID, CityName, PostalCode)
-            VALUES (@countryID, @cityName, @postalCode) SET @CityID = SCOPE_IDENTITY();";
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var command = new SqlCommand(sql, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@countryName", city.CountryID));
-                command.Parameters.Add(new SqlParameter("@cityName", city.CityName));
-                command.Parameters.Add(new SqlParameter("@postalCode", city.PostalCode));
-                var outputParam = new SqlParameter
-                {
-                    ParameterName = "@CityID",
-                    SqlDbType = SqlDbType.Int,
-                    Direction = ParameterDirection.Output
-                };
-                command.Parameters.Add(outputParam);
-                await command.ExecuteNonQueryAsync();
-                connection.Close();
-                return (int)outputParam.Value;
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteCityAsync(int id)
+        public Task<bool> DeleteCityAsync(int id)
         {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DoesExist(string countryName, string stateName, string cityName)
+        {
+            string sql = "SELECT ct.CityID, ct.CountryID, ct.CityName" +
+                " FROM Countries as co, Cities as ct, States as st" +
+                " WHERE co.CountryID = ct.CountryID" +
+                " and st.CountryID = co.CountryID" +
+                " and ct.CityName = @cityName" +
+                " and st.StateName = @stateName" +
+                " and co.CountryName = @countryName";
             using (var connection = _context.CreateConnection())
             {
-                string sql = "DELETE FROM Cities WHERE CityID = @id";
                 connection.Open();
                 var command = new SqlCommand(sql, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@id", id));
-                int rows = await command.ExecuteNonQueryAsync();
-                connection.Close();
-                if (rows == 1)
-                {
-                    return true;
-                }
-                else
+                command.Parameters.Add(new SqlParameter("countryName", countryName));
+                command.Parameters.Add(new SqlParameter("stateName", stateName));
+                command.Parameters.Add(new SqlParameter("cityName", cityName));
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
                 {
                     return false;
                 }
+                return true;
             }
         }
-        public async Task<City> GetCityAsync(int cityId)
+
+        public async Task<IEnumerable<City>> GetCitiesAsync()
         {
-            var query = $"SELECT* FROM Cities WHERE CityID = @id";
             using (var connection = _context.CreateConnection())
             {
+                string sql = "SELECT* FROM Cities";
+                var cities = await connection.QueryAsync<City>(sql);
+                return cities;
+            }
+        }
+
+        public async Task<City> GetCityAsync(int cityId)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                string sql = $"SELECT* FROM Cities WHERE CityID = @id";
                 connection.Open();
-                var command = new SqlCommand(query, (SqlConnection)connection);
+                var command = new SqlCommand(sql, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@id", cityId));
                 var reader = await command.ExecuteReaderAsync();
                 if (!reader.HasRows)
@@ -72,36 +74,10 @@ namespace ZhetistikApp.Api.Repositories
                     return null;
                 }
                 await reader.ReadAsync();
-                connection.Close();
                 return new City(
                     (int)reader[0],
                     (int)reader[1],
-                    (string)reader[2],
-                    (string)reader[3]
-                );
-            }
-        }
-
-        public async Task<City> GetCityAsync(string cityName)
-        {
-            var query = $"SELECT* FROM Cities WHERE CityName = @cityName";
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var command = new SqlCommand(query, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@cityName", cityName));
-                var reader = await command.ExecuteReaderAsync();
-                if (!reader.HasRows)
-                {
-                    return null;
-                }
-                await reader.ReadAsync();
-                connection.Close();
-                return new City(
-                    (int)reader[0],
-                    (int)reader[1],
-                    (string)reader[2],
-                    (string)reader[3]
+                    (string)reader[2]
                 );
             }
         }
@@ -113,9 +89,7 @@ namespace ZhetistikApp.Api.Repositories
                 connection.Open();
                 var query =
                     $"UPDATE Cities " +
-                    $"SET CountryID = {city.CountryID}, " +
-                    $"CityName = '{city.CityName}'," +
-                    $"PostalCode = '{city.CityName}' " +
+                    $"SET CityName = {city.CityName}, CountryID = {city.CountryID}" +
                     $"WHERE CityID = {id}";
                 var rows = await connection.ExecuteAsync(query);
                 connection.Close();

@@ -24,12 +24,5 @@ namespace ZhetistikApp.Api.DTOs
         {
             return new LocationDTO(location.LocationID, location.CountryName, location.StateName, location.CityName);
         }
-        public static IEnumerable<LocationDTO> AsDto(this IEnumerable<LocationViewModel> locations)
-        {
-            foreach (var location in locations)
-            {
-                yield return new LocationDTO(location.LocationID, location.CountryName, location.StateName, location.CityName);
-            }
-        }
     }
 }

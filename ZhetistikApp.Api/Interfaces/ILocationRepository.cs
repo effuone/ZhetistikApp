@@ -9,7 +9,7 @@ namespace ZhetistikApp.Api.Interfaces
         public Task<Location> GetLocationAsync(int locationId);
         public Task<LocationViewModel> GetLocationViewModelAsync(int locationId);
         public Task<Location> GetLocationAsync(string cityName);
-        public Task<IEnumerable<LocationViewModel>> GetLocationViewModelByCityAsync(string cityName);
+        public Task<IEnumerable<LocationViewModel>> GetLocationViewModelsByCityAsync(string cityName);
         public Task<IEnumerable<LocationViewModel>> GetLocationViewModelsAsync();
         public Task<IEnumerable<Location>> GetLocationsAsync();
         public Task<int> CreateLocationAsync(Location location);

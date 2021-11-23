@@ -4,6 +4,10 @@ namespace ZhetistikApp.Api.DTOs.Location
 {
     public class LocationDTO
     {
+        public LocationDTO()
+        {
+        }
+
         public LocationDTO(int locationId, string countryName, string stateName, string cityName)
         {
 

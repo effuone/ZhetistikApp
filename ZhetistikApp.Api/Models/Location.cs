@@ -10,14 +10,16 @@ namespace ZhetistikApp.Api.Models
         public int LocationID { get; set; }
         public int CityID { get; set; }
         public int CountryID { get; set; }
-        public int StateID { get; set; }
 
-        public Location(int locationID, int cityID, int countryID, int stateID)
+        public Location(int locationId, int countryId, int cityId)
         {
-            LocationID = locationID;
-            CityID = cityID;
-            CountryID = countryID;
-            StateID = stateID;
+            LocationID = locationId;
+            CityID = cityId;
+            CountryID = countryId;
+        }
+
+        public Location()
+        {
         }
     }
 }

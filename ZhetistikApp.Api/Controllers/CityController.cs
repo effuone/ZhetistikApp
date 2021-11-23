@@ -40,31 +40,69 @@ namespace ZhetistikApp.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CityDTO>> CreateCityAsync(CreateCityDTO cityDTO)
         {
-            //INPUT
-            //CountryName CityName StateName
-            //OUTPUT
-            //CityID CountryName CityName StateName
-            //TODO
-            //Generate unique api for new location
-            //BEFORE its neccessary to check whether location does not exist
-            var result = await _cityRepository.DoesExist(cityDTO.CountryName, cityDTO.StateName, cityDTO.CityName);
-
-            if (!result)
+            var existingCountry = await _countryRepository.GetCountryAsync(cityDTO.CountryName);
+            if(existingCountry is null)
             {
-                var countryId = ((await _countryRepository.GetCountryAsync(cityDTO.CountryName)).CountryID);
+                var country = new Country();
+                country.CountryName = cityDTO.CountryName;
+                country.CountryID = await _countryRepository.CreateCountryAsync(country);
                 var city = new City();
                 city.CityName = cityDTO.CityName;
-                city.CountryID = (await _cityRepository.GetCitiesAsync()).Where(x => x.CountryID == countryId).FirstOrDefault().CountryID;
+                city.CountryID = country.CountryID;
                 city.CityID = await _cityRepository.CreateCityAsync(city);
-                //Saved in db
-                //Now we have to return DTO object of names
-                var ctdto = new CityDTO();
-                ctdto.CityID = city.CityID;
-                ctdto.CityName = city.CityName;
-                ctdto.CountryName = (await _countryRepository.GetCountryAsync(countryId)).CountryName;
-                return CreatedAtAction(nameof(GetCityAsync), new { id = ctdto.CityID }, ctdto);
+                var returner = new CityDTO();
+                returner.CityID = city.CityID;
+                returner.CityName = cityDTO.CityName;
+                returner.CountryName = country.CountryName;
+                return CreatedAtAction(nameof(CreateCityAsync), new { id = city.CityID }, returner);
             }
-            return StatusCode(409, "This city already exists.");
+            else
+            {
+                var existingCity = await _cityRepository.GetCityAsync(cityDTO.CityName);
+                if(existingCity is null)
+                {
+                    var city = new City();
+                    city.CityName = cityDTO.CityName;
+                    city.CountryID = existingCountry.CountryID;
+                    city.CityID = await _cityRepository.CreateCityAsync(city);
+                    var returner = new CityDTO();
+                    returner.CityID = city.CityID;
+                    returner.CityName = cityDTO.CityName;
+                    returner.CountryName = existingCountry.CountryName;
+                    return CreatedAtAction(nameof(CreateCityAsync), new { id = city.CityID }, returner);
+                }
+                else
+                {
+                    return StatusCode(409, $"City {existingCity.CityName} of {await _countryRepository.GetCountryAsync(existingCity.CountryID)} already exists");
+                }
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CityDTO>> UpdateCityAsync(int id, UpdateCityDTO cityDTO)
+        {
+            var existingCity = await _cityRepository.GetCityAsync(id);
+            if(existingCity is null)
+            {
+                return NotFound();
+            }
+            var existingCountry = await _countryRepository.GetCountryAsync(cityDTO.CountryName);
+            var city = new City();
+            city.CityName = cityDTO.CityName;
+            city.CountryID = existingCountry.CountryID;
+            city.CityID = id;
+            await _cityRepository.UpdateCityAsync(id, city);
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCityAsync(int id)
+        {
+            var existingCity = await _cityRepository.GetCityAsync(id);
+            if (existingCity is null)
+            {
+                return NotFound();
+            }
+            await _cityRepository.DeleteCityAsync(id);
+            return NoContent();
         }
     }
 }

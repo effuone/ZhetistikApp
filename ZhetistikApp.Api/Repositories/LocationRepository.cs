@@ -7,28 +7,28 @@ using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.Repositories
 {
-    public class CityRepository : ICityRepository
+    public class LocationRepository : ILocationRepository
     {
         private readonly DapperContext _context;
-        public CityRepository(DapperContext context)
+        public LocationRepository(DapperContext context)
         {
             _context = context;
         }
 
-        public async Task<int> CreateCityAsync(City city)
+        public async Task<int> CreateLocationAsync(Location location)
         {
-            string sql = @"INSERT INTO Cities (CountryID, CityName)
-            VALUES (@countryId, @cityName) SET @CityID = SCOPE_IDENTITY();";
+            string sql = @"INSERT INTO Locations (CountryID, CityID)
+            VALUES (@countryId, @cityId) SET @LocationID = SCOPE_IDENTITY();";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
                 var command = new SqlCommand(sql, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@countryId", city.CountryID));
-                command.Parameters.Add(new SqlParameter("@cityName", city.CityName));
+                command.Parameters.Add(new SqlParameter("@countryId", location.CountryID));
+                command.Parameters.Add(new SqlParameter("@cityId", location.CityID));
 
                 var outputParam = new SqlParameter
                 {
-                    ParameterName = "@CityID",
+                    ParameterName = "@LocationID",
                     SqlDbType = SqlDbType.Int,
                     Direction = ParameterDirection.Output
                 };
@@ -39,11 +39,11 @@ namespace ZhetistikApp.Api.Repositories
             }
         }
 
-        public async Task DeleteCityAsync(int id)
+        public async Task DeleteLocationAsync(int id)
         {
             using (var connection = _context.CreateConnection())
             {
-                string sql = "DELETE FROM Countries WHERE CountryID = @id";
+                string sql = "DELETE FROM Locations WHERE LocationID = @id";
                 connection.Open();
                 var command = new SqlCommand(sql, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@id", id));
@@ -52,46 +52,36 @@ namespace ZhetistikApp.Api.Repositories
             }
         }
 
-
-        public async Task<IEnumerable<City>> GetCitiesAsync()
+        public async Task<Location> GetLocationAsync(int locationId)
         {
+            var query = $"SELECT* FROM Locations WHERE LocationID = @id";
             using (var connection = _context.CreateConnection())
             {
-                string sql = "SELECT* FROM Cities";
-                var cities = await connection.QueryAsync<City>(sql);
-                return cities;
-            }
-        }
-
-        public async Task<City> GetCityAsync(int cityId)
-        {
-            using (var connection = _context.CreateConnection())
-            {
-                string sql = $"SELECT* FROM Cities WHERE CityID = @id";
                 connection.Open();
-                var command = new SqlCommand(sql, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@id", cityId));
+                var command = new SqlCommand(query, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", locationId));
                 var reader = await command.ExecuteReaderAsync();
                 if (!reader.HasRows)
                 {
                     return null;
                 }
                 await reader.ReadAsync();
-                return new City(
+                return new Location(
                     (int)reader[0],
                     (int)reader[1],
-                    (string)reader[2]
+                    (int)reader[2]
                 );
             }
         }
 
-        public async Task<City> GetCityAsync(string cityName)
+        public async Task<Location> GetLocationAsync(string cityName)
         {
+            var query = $"SELECT* FROM Locations WHERE CityID = " +
+                $"(SELECT ct.CityID FROM Cities AS ct WHERE ct.CityName = @cityName)";
             using (var connection = _context.CreateConnection())
             {
-                string sql = $"SELECT* FROM Cities WHERE CityName = @cityName";
                 connection.Open();
-                var command = new SqlCommand(sql, (SqlConnection)connection);
+                var command = new SqlCommand(query, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@cityName", cityName));
                 var reader = await command.ExecuteReaderAsync();
                 if (!reader.HasRows)
@@ -99,23 +89,34 @@ namespace ZhetistikApp.Api.Repositories
                     return null;
                 }
                 await reader.ReadAsync();
-                return new City(
+                return new Location(
                     (int)reader[0],
                     (int)reader[1],
-                    (string)reader[2]
+                    (int)reader[2]
                 );
             }
         }
 
-        public async Task UpdateCityAsync(int id, City city)
+        public async Task<IEnumerable<Location>> GetLocationsAsync()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                string sql = "SELECT* FROM Locations";
+                var locations = await connection.QueryAsync<Location>(sql);
+                return locations;
+            }
+        }
+
+        public async Task UpdateLocationAsync(int id, Location location)
         {
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
                 var query =
-                    $"UPDATE Cities " +
-                    $"SET CityName = '{city.CityName}', CountryID = {city.CountryID}" +
-                    $"WHERE CityID = {id}";
+                    $"UPDATE Countries " +
+                    $"SET CountryID = {location.CountryID}, " +
+                    $"CityID = {location.CityID} " +
+                    $"WHERE LocationID = {id}";
                 var rows = await connection.ExecuteAsync(query);
             }
         }

@@ -42,11 +42,15 @@ namespace ZhetistikApp.Api.Repositories
         {
             using (var connection = _context.CreateConnection())
             {
-                string sql = "DELETE FROM Countries WHERE CountryID = @id";
+                string deleteCities = "DELETE FROM Cities WHERE CountryID = @id";
+                string deleteCountries = "DELETE FROM Countries WHERE CountryID = @id";
                 connection.Open();
-                var command = new SqlCommand(sql, (SqlConnection)connection);
+                var command = new SqlCommand(deleteCities, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@id", id));
-                int rows = await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command = new SqlCommand(deleteCountries, (SqlConnection)connection);
+                command.Parameters.Add(new SqlParameter("@id", id));
+                await command.ExecuteNonQueryAsync();
                 connection.Close();
             }
         }
@@ -129,41 +133,18 @@ namespace ZhetistikApp.Api.Repositories
             }
         }
 
-        public async Task<Country> GetCountryByStateAsync(string stateName)
-        {
-            var query = "SELECT co.CountryID, co.CountryName" +
-                " FROM Countries as co, States as st " +
-                "WHERE co.CountryID = st.CountryID" +
-                " and st.StateName = @stateName";
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var command = new SqlCommand(query, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@stateName", stateName));
-                var reader = await command.ExecuteReaderAsync();
-                if (!reader.HasRows)
-                {
-                    return null;
-                }
-                await reader.ReadAsync();
-                connection.Close();
-                return new Country(
-                    (int)reader[0],
-                    (string)reader[1]
-                );
-            }
-        }
-
         public async Task UpdateCountryAsync(int id, Country country)
         {
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
-                var query =
+                var updateCities = $"UPDATE Cities SET CountryID = {country.CountryID} WHERE CountryID = {id}";
+                await connection.ExecuteAsync(updateCities);
+                var updateCountries =
                     $"UPDATE Countries " +
                     $"SET CountryName = '{country.CountryName}' " +
                     $"WHERE CountryID = {id}";
-                var rows = await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(updateCountries);
             }
         }
     }

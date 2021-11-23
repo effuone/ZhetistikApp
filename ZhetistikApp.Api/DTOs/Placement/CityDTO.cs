@@ -5,7 +5,6 @@ namespace ZhetistikApp.Api.DTOs.Placement
     public class CityDTO {
         public int CityID { get; set; }
         public string CountryName { get; set; }
-        public string StateName { get; set; }
         public string CityName { get; set; }
     }
 
@@ -14,16 +13,12 @@ namespace ZhetistikApp.Api.DTOs.Placement
         [Required]
         public string CountryName { get; set; }
         [Required]
-        public string StateName { get; set; }
-        [Required]
         public string CityName { get; set; }
     }
     public class UpdateCityDTO
     {
         [Required]
         public string CountryName { get; set; }
-        [Required]
-        public string StateName { get; set; }
         [Required]
         public string CityName { get; set; }
     }

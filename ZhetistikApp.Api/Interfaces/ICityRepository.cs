@@ -1,14 +1,15 @@
-﻿using ZhetistikApp.Api.Models;
+﻿using ZhetistikApp.Api.DTOs.Placement;
+using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.Interfaces
 {
     public interface ICityRepository
     {
         public Task<City> GetCityAsync(int cityId);
+        public Task<City> GetCityAsync(string cityName);
         public Task<IEnumerable<City>> GetCitiesAsync();
-        public Task<bool> DoesExist(string countryName, string stateName, string cityName);
         public Task<int> CreateCityAsync(City city);
-        public Task<bool> DeleteCityAsync(int id);
-        public Task<int> UpdateCityAsync(int id, City city);
+        public Task DeleteCityAsync(int id);
+        public Task UpdateCityAsync(int id, City city);
     }
 }

@@ -8,7 +8,6 @@ namespace ZhetistikApp.Api.Interfaces
         public Task<Country> GetCountryAsync(string countryName);
         public Task<IEnumerable<Country>> GetCountriesAsync();
         public Task<Country> GetCountryByCityAsync(string cityName);
-        public Task<Country> GetCountryByStateAsync(string stateName);
         public Task<int> CreateCountryAsync(Country country);
         public Task DeleteCountryAsync(int id);
         public Task UpdateCountryAsync(int id, Country country);

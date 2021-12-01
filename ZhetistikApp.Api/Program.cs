@@ -17,6 +17,8 @@ builder.Services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddSingleton<ICityRepository, CityRepository>();
 builder.Services.AddSingleton<ICountryRepository, CountryRepository>();
 builder.Services.AddSingleton<ILocationRepository, LocationRepository>();
+builder.Services.AddSingleton<IAchievementTypeRepository, AchievementTypeRepository>();
+builder.Services.AddSingleton<IUniversityTypeRepository, UniversityTypeRepository>();
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;

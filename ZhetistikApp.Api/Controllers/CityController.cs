@@ -7,7 +7,7 @@ using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.Controllers
 {
-    [Route("api/cities")]
+    [Route("api/cities/")]
     [ApiController]
     public class CityController : ControllerBase
     {

@@ -9,5 +9,15 @@ namespace ZhetistikApp.Api.Models
         [Key]
         public int AchievementTypeID { get; set; }
         public string AchievementTypeName { get; set; }
+
+        public AchievementType(int achievementTypeID, string achievementTypeName)
+        {
+            AchievementTypeID = achievementTypeID;
+            AchievementTypeName = achievementTypeName;
+        }
+
+        public AchievementType()
+        {
+        }
     }
 }

@@ -20,17 +20,18 @@ namespace ZhetistikApp.Api.Repositories
         {
             string sql = "INSERT INTO Portfolios " +
                 "(CandidateID, " +
-                "PlacementID, " +
+                "LocationID, " +
                 "AchievementID, " +
                 "IsPublished, " +
                 "CreatedDate)" +
-                "VALUES (@candidateID, @placementID, @achievementID," +
+                "VALUES (@candidateID, @locationID, @achievementID," +
                 "@isPublished, @createdDate) SET @PortfolioID = SCOPE_IDENTITY();";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
                 var command = new SqlCommand(sql, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@candidateID", portfolio.CandidateID));
+                command.Parameters.Add(new SqlParameter("@locationID", portfolio.LocationID));
                 command.Parameters.Add(new SqlParameter("@achievementID", portfolio.AchievementID));
                 command.Parameters.Add(new SqlParameter("@isPublished", portfolio.IsPublished));
                 command.Parameters.Add(new SqlParameter("@createdDate", portfolio.CreatedDate));
@@ -60,7 +61,7 @@ namespace ZhetistikApp.Api.Repositories
             }
         }
 
-        public async Task<Portfolio> GetPortfolioByIdAsync(int id)
+        public async Task<Portfolio> GetPortfolioAsync(int id)
         {
             var query = $"SELECT* FROM Portfolios WHERE PortfolioID = {id}";
             using (var connection = _context.CreateConnection())
@@ -71,36 +72,10 @@ namespace ZhetistikApp.Api.Repositories
             }
         }
 
-        public async Task<Portfolio> GetPortfolioByPersonAsync(string firstName, string lastName)
+        public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
         {
-            var query = $"SELECT * FROM Portfolios WHERE FirstName = '{firstName}' and LastName = '{lastName}' ";
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var candidates = await connection.QueryAsync<Portfolio>(query);
-                return candidates.FirstOrDefault();
-            }
-        }
+            var query = "SELECT * FROM Portfolios";
 
-        public async Task<IEnumerable<Portfolio>> GetPortfoliosByLocationAsync(string countryName, string cityName)
-        {
-            var query = "SELECT por.PortofolioID, por.CandidateID, por.LocationID, por.AchievementID, por.IsPublished, por.CreatedDate " +
-                "FROM Portfolios as por, Locations as plac " +
-                "WHERE por.PlacementID = plac.PlacementID " +
-                "AND plac.CityID = (SELECT c.CityID FROM Cities as c WHERE CityName = @cityName and CountryID = " +
-                "(SELECT co.CountryID FROM Countries as co WHERE co.CountryName = @countryName)) ";
-
-            using (var connection = _context.CreateConnection())
-            {
-                connection.Open();
-                var candidates = await connection.QueryAsync<Portfolio>(query);
-                return candidates;
-            }
-        }
-
-        public async Task<IEnumerable<Portfolio>> GetPublishedPortfolios(bool isPublished)
-        {
-            string query = $"SELECT * FROM Portfolios AS P WHERE P.IsPublished = {isPublished}";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();

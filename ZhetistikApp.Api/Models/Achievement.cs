@@ -16,5 +16,14 @@ namespace ZhetistikApp.Api.Models
         {
 
         }
+
+        public Achievement(int achievementID, int achievementTypeID, int? score, byte[] image, string uRL)
+        {
+            AchievementID = achievementID;
+            AchievementTypeID = achievementTypeID;
+            Score = score;
+            Image = image;
+            URL = uRL;
+        }
     }
 }

@@ -7,13 +7,27 @@ namespace ZhetistikApp.Api.Models
     public class University
     {
         [Key]
-        public long UniversityID { get; set; }
+        public int UniversityID { get; set; }
         public string UniversityName { get; set; }
         public string UniversityDescription { get; set; }
-        public long LocationID { get; set; }
-        public DateOnly FoundationYear { get; set; }
-        public long UniversityTypeID { get; set; }
+        public int LocationID { get; set; }
+        public DateTime FoundationYear { get; set; }
+        public int UniversityTypeID { get; set; }
         public int StudentsCount { get; set; }
 
+        public University()
+        {
+
+        }
+        public University(int universityID, string universityName, string universityDescription, int locationID, DateTime foundationYear, int universityTypeID, int studentsCount)
+        {
+            UniversityID = universityID;
+            UniversityName = universityName;
+            UniversityDescription = universityDescription;
+            LocationID = locationID;
+            FoundationYear = foundationYear;
+            UniversityTypeID = universityTypeID;
+            StudentsCount = studentsCount;
+        }
     }
 }

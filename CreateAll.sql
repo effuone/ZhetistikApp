@@ -1,11 +1,11 @@
---USE master
---GO
---DROP DATABASE IF EXISTS ZhetistikApp
---GO
---CREATE DATABASE ZhetistikApp
---GO
---USE ZhetistikApp
---GO
+USE master
+GO
+DROP DATABASE IF EXISTS ZhetistikApp
+GO
+CREATE DATABASE ZhetistikApp
+GO
+USE ZhetistikApp
+GO
 
 DROP TABLE IF EXISTS Countries;
 CREATE TABLE Countries(
@@ -23,34 +23,23 @@ CONSTRAINT QK_Cities_CityName UNIQUE (CityName),
 CONSTRAINT PK_Cities PRIMARY KEY (CityID),
 CONSTRAINT FK_Cities_To_Countries FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
 )
-DROP TABLE IF EXISTS States;
-CREATE TABLE States(
-StateID INT IDENTITY(1,1) NOT NULL,
-CountryID INT NOT NULL,
-StateName NVARCHAR(50) NOT NULL
-CONSTRAINT QK_States_StateName UNIQUE (StateName),
-CONSTRAINT PK_States PRIMARY KEY (StateID),
-CONSTRAINT FK_States_To_Countries FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
-)
 DROP TABLE IF EXISTS Locations;
 CREATE TABLE Locations(
 LocationID INT NOT NULL,
 CityID INT NOT NULL,
-StateID INT NOT NULL,
 CountryID INT NOT NULL,
 CONSTRAINT PK_Locations PRIMARY KEY (LocationID),
 CONSTRAINT FK_Locations_To_Cities FOREIGN KEY (CityID) REFERENCES Cities(CityID),
-CONSTRAINT FK_Locations_To_Countries FOREIGN KEY (CountryID) REFERENCES Countries(CountryID),
-CONSTRAINT FK_Locations_To_States FOREIGN KEY (StateID) REFERENCES States(StateID)
+CONSTRAINT FK_Locations_To_Countries FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
 )
 DROP TABLE IF EXISTS Schools;
 CREATE TABLE Schools(
 SchoolID INT IDENTITY(1,1) NOT NULL,
-PlacementID INT NOT NULL,
+LocationID INT NOT NULL,
 SchoolName NVARCHAR(100) NOT NULL,
 FoundationYear DATE NOT NULL,
 CONSTRAINT PK_Schools PRIMARY KEY (SchoolID),
-CONSTRAINT FK_Schools_To_Locations FOREIGN KEY (PlacementID) REFERENCES Locations(LocationID)
+CONSTRAINT FK_Schools_To_Locations FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 )
 GO
 DROP TABLE IF EXISTS UniversityTypes;
@@ -66,13 +55,13 @@ CREATE TABLE Universities(
 UniversityID INT IDENTITY(1,1) NOT NULL,
 UniversityName NVARCHAR(50) NOT NULL,
 UniversityDescription NVARCHAR(1000) NOT NULL,
-PlacementID INT NOT NULL,
+LocationID INT NOT NULL,
 FoundationYear DATE NOT NULL,
 StudentsCount INT NOT NULL,
 UniversityTypeID INT NOT NULL,
 CONSTRAINT QK_Universities_Name UNIQUE (UniversityName),
 CONSTRAINT PK_Universities PRIMARY KEY (UniversityID),
-CONSTRAINT FK_Universities_To_Locations FOREIGN KEY (PlacementID) REFERENCES Locations(LocationID),
+CONSTRAINT FK_Universities_To_Locations FOREIGN KEY (LocationID) REFERENCES Locations(LocationID),
 CONSTRAINT FK_Universities_To_UniversityTypes FOREIGN KEY (UniversityTypeID) REFERENCES UniversityTypes(UniversityTypeID)
 )
 GO
@@ -133,12 +122,12 @@ DROP TABLE IF EXISTS Portfolios;
 CREATE TABLE Portfolios(
 PortofolioID INT IDENTITY(1,1) NOT NULL,
 CandidateID INT NOT NULL,
-PlacementID INT NOT NULL,
+LocationID INT NOT NULL,
 AchievementID INT NOT NULL,
 IsPublished BIT NOT NULL,
 CreatedDate DATETIME NOT NULL,
 CONSTRAINT PK_Portfolios PRIMARY KEY (PortofolioID),
 CONSTRAINT FK_Portfolios_To_Candidates FOREIGN KEY (CandidateID) REFERENCES Candidates(CandidateID),
-CONSTRAINT FK_Portfolios_To_Locations FOREIGN KEY (PlacementID) REFERENCES Locations(LocationID),
+CONSTRAINT FK_Portfolios_To_Locations FOREIGN KEY (LocationID) REFERENCES Locations(LocationID),
 CONSTRAINT FK_Portfolios_To_Achievement FOREIGN KEY (CandidateID) REFERENCES Achievements(AchievementID),
 )

@@ -1,4 +1,4 @@
-namespace ZhetistikApp.Api
+namespace ZhetistikApp.Web
 {
     public class WeatherForecast
     {

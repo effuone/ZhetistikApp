@@ -7,7 +7,7 @@ namespace ZhetistikApp.Api.Interfaces
         public Task<Achievement> GetAchievementByIdAsync(int id);
         public Task<IEnumerable<Achievement>> GetAllAchievementsAsync();
         public Task<int> CreateAchievementAsync(Achievement achievement);
-        public Task DeleteAchievementAsync(int id);
-        public Task UpdateAchievementAsync(int id, Achievement achievement);
+        public Task<bool> DeleteAchievementAsync(int id);
+        public Task<bool> UpdateAchievementAsync(int id, Achievement achievement);
     }
 }

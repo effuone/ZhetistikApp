@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
+using System.Data;
 using System.Data.SqlClient;
 using ZhetistikApp.Api.DataAccess;
 using ZhetistikApp.Api.Interfaces;
@@ -17,46 +19,66 @@ namespace ZhetistikApp.Api.Repositories
 
         public async Task<int> CreateAchievementAsync(Achievement achievement)
         {
-            string sql = @"INSERT INTO Achievements (CountryID, CityID)
-            VALUES (@countryId, @cityId) SET @LocationID = SCOPE_IDENTITY();";
+            string sql = "INSERT INTO Achievements (AchievementTypeID, AchievementDescription, AchievementDate, Score, Image, URL) " +
+                "VALUES(@portfolioId, @typeId, @description, @achievementDate, @score, @image, @url) SET @id = SCOPE_IDENTITY(); ";
+            var p = new DynamicParameters();
+            p.Add("@typeId", achievement.AchievementTypeID);
+            p.Add("description", achievement.Description);
+            p.Add("achievementDate", achievement.AchievementDate);
+            p.Add("score", achievement.Score);
+            p.Add("image", achievement.Image);
+            p.Add("url", achievement.URL);
+            p.Add("id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
             using (var connection = _context.CreateConnection())
             {
-                connection.Open();
-                var command = new SqlCommand(sql, (SqlConnection)connection);
-                //command.Parameters.Add(new SqlParameter("@countryId", achievement.CountryID));
-                //command.Parameters.Add(new SqlParameter("@cityId", achievement.CityID));
-
-                var outputParam = new SqlParameter
-                {
-                    ParameterName = "@LocationID",
-                    SqlDbType = SqlDbType.Int,
-                    Direction = ParameterDirection.Output
-                };
-                command.Parameters.Add(outputParam);
-                await command.ExecuteNonQueryAsync();
-                connection.Close();
-                return (int)outputParam.Value;
+                var records = await connection.QueryAsync(sql, p);
+                achievement.AchievementID = p.Get<int>("@id");
+                return achievement.AchievementID;
             }
         }
 
-        public Task DeleteAchievementAsync(int id)
+        public async Task<bool> DeleteAchievementAsync(int id)
         {
-            throw new NotImplementedException();
+            using(var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var achievement = await connection.GetAsync<Achievement>(id);
+                var result = await connection.DeleteAsync<Achievement>(achievement);
+                return result;
+            }
         }
 
-        public Task<Achievement> GetAchievementByIdAsync(int id)
+        public async Task<Achievement> GetAchievementByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Achievements WHERE AchievementID = {id}";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var achievement = await connection.QueryFirstAsync<Achievement>(query);
+                return achievement;
+            }
         }
 
-        public Task<IEnumerable<Achievement>> GetAllAchievementsAsync()
+        public async Task<IEnumerable<Achievement>> GetAllAchievementsAsync()
         {
-            throw new NotImplementedException();
+            var query = $"SELECT* FROM Achievements";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var achievements = await connection.QueryAsync<Achievement>(query);
+                return achievements;
+            }
         }
 
-        public Task UpdateAchievementAsync(int id, Achievement achievement)
+        public async Task<bool> UpdateAchievementAsync(int id, Achievement achievement)
         {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                achievement.AchievementID = id;
+                var result = await connection.UpdateAsync<Achievement>(achievement);
+                return result;
+            }
         }
     }
 }

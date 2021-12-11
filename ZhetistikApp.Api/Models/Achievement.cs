@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Dapper.Contrib.Extensions;
 
 namespace ZhetistikApp.Api.Models
 {
@@ -8,7 +7,10 @@ namespace ZhetistikApp.Api.Models
     {
         [Key]
         public int AchievementID { get; set; }
+        [ExplicitKey]
         public int AchievementTypeID { get; set; }
+        public string Description { get; set; }
+        public DateTime AchievementDate { get; set; }
         public int? Score { get; set; }
         public byte[] Image { get; set; }
         public string URL { get; set; }
@@ -16,11 +18,12 @@ namespace ZhetistikApp.Api.Models
         {
 
         }
-
-        public Achievement(int achievementID, int achievementTypeID, int? score, byte[] image, string uRL)
+        public Achievement(int achievementID, int achievementTypeID, string description, DateTime achievementDate, int? score, byte[] image, string uRL)
         {
             AchievementID = achievementID;
             AchievementTypeID = achievementTypeID;
+            Description = description;
+            AchievementDate = achievementDate;
             Score = score;
             Image = image;
             URL = uRL;

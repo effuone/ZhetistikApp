@@ -19,13 +19,12 @@ namespace ZhetistikApp.Api.Repositories
 
         public async Task<int> CreateCandidate(Candidate candidate)
         {
-            string sql = @"INSERT INTO Candidates (UserID, FirstName, LastName, Birthday, Email, PhoneNumber)
-      VALUES (@userID, @firstName, @lastName, @birthday, @email, @phoneNumber) SET @CandidateID = SCOPE_IDENTITY();";
+            string sql = @"INSERT INTO Candidates (FirstName, LastName, Birthday, Email, PhoneNumber)
+      VALUES (@firstName, @lastName, @birthday, @email, @phoneNumber) SET @CandidateID = SCOPE_IDENTITY();";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
                 var command = new SqlCommand(sql, (SqlConnection)connection);
-                command.Parameters.Add(new SqlParameter("@userID", candidate.UserID));
                 command.Parameters.Add(new SqlParameter("@firstName", candidate.FirstName));
                 command.Parameters.Add(new SqlParameter("@lastName", candidate.LastName));
                 command.Parameters.Add(new SqlParameter("@birthday", candidate.Birthday));

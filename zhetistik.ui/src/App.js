@@ -7,10 +7,6 @@ import {Navigation} from './Navigation';
 import {Achievement} from './Achievement';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
-
-console.log('Candidate', Candidate);
-console.log('Achievement', Achievement);
-console.log('Home', Home);
 function App() {
   return (
     <BrowserRouter>

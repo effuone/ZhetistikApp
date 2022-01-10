@@ -6,7 +6,7 @@ using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/portfolios")]
     [ApiController]
     public class PortofolioController : ControllerBase
     {

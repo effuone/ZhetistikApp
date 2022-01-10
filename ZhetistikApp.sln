@@ -5,7 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZhetistikApp.Api", "ZhetistikApp.Api\ZhetistikApp.Api.csproj", "{C9A331F6-8E4E-45E4-A5A5-04DA28C83FFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZhetistikApp.Web", "ZhetistikApp.Web\ZhetistikApp.Web.csproj", "{2CE5848A-9D4A-4C57-B9A1-4107306EE76D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZhetistikApp.Web", "ZhetistikApp.Web\ZhetistikApp.Web.csproj", "{2CE5848A-9D4A-4C57-B9A1-4107306EE76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhetistik.Api", "Zhetistik.Api\Zhetistik.Api.csproj", "{5AF8D71A-F5FD-4633-B4A7-50CDFDBA15E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zhetistik.Core", "Zhetistik.Core\Zhetistik.Core.csproj", "{DA5BE68B-1881-4493-9656-1B6C8FE5A793}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{2CE5848A-9D4A-4C57-B9A1-4107306EE76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE5848A-9D4A-4C57-B9A1-4107306EE76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE5848A-9D4A-4C57-B9A1-4107306EE76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF8D71A-F5FD-4633-B4A7-50CDFDBA15E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF8D71A-F5FD-4633-B4A7-50CDFDBA15E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF8D71A-F5FD-4633-B4A7-50CDFDBA15E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF8D71A-F5FD-4633-B4A7-50CDFDBA15E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA5BE68B-1881-4493-9656-1B6C8FE5A793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA5BE68B-1881-4493-9656-1B6C8FE5A793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA5BE68B-1881-4493-9656-1B6C8FE5A793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA5BE68B-1881-4493-9656-1B6C8FE5A793}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,7 @@ using ZhetistikApp.Api.Models;
 
 namespace ZhetistikApp.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/achievements")]
     [ApiController]
     public class AchievementController : ControllerBase
     {
@@ -93,7 +93,7 @@ namespace ZhetistikApp.Api.Controllers
                 var httpRequest = Request.Form;
                 var postedFile = httpRequest.Files[0];
                 string fileName = postedFile.FileName;
-                var physicalPath = _env.ContentRootPath + "/Photos/" + fileName;
+                var physicalPath = _env.ContentRootPath + "/AchievementPhotos/" + fileName;
                 using(var stream = new FileStream(physicalPath, FileMode.Create))
                 {
                     await postedFile.CopyToAsync(stream);

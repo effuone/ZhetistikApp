@@ -7,10 +7,10 @@ namespace ZhetistikApp.Api.Controllers
     [ApiController]
     public class PhotoController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetPhotoAsync()
-        {
+        //[HttpGet]
+        //public async Task<IActionResult> GetPhotoAsync()
+        //{
 
-        }
+        //}
     }
 }

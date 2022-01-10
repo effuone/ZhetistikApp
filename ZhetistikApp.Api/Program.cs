@@ -43,8 +43,8 @@ var app = builder.Build();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Photos")),
-    RequestPath = "/Photos"
+        Path.Combine(Directory.GetCurrentDirectory(), "AchievementPhotos")),
+    RequestPath = "/AchievementPhotos"
 });
 
 // Configure the HTTP request pipeline.

@@ -112,21 +112,14 @@ namespace ZhetistikApp.Api.Repositories
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
-                var query = $"UPDATE Candidates SET UserID = {candidate.UserID}, " +
-                    $"FirstName = '{candidate.FirstName}', LastName = '{candidate.LastName}', " +
-                    $"Birthday = '{candidate.Birthday}', Email = '{candidate.Email}', " +
-                    $"PhoneNumber = '{candidate.PhoneNumber}' WHERE CandidateID = {id}";
-                var command = new SqlCommand(
-                    "UPDATE Candidates " +
-                    "SET UserID = @userId, " +
-                    "FirstName = @firstName," +
+                var query = "UPDATE Candidates" +
+                    "SET FirstName = @firstName, " +
                     "LastName = @lastName, " +
                     "Birthday = @birthday, " +
                     "Email = @email, " +
-                    "Phone = @phoneNumber " +
-                    " WHERE CandidateID = @id", (SqlConnection)connection);
+                    "PhoneNumber = @phoneNumber WHERE CandidateID = @id; ";
+                var command = new SqlCommand(query, (SqlConnection)connection);
                 command.Parameters.Add(new SqlParameter("@id", id));
-                command.Parameters.Add(new SqlParameter("@userId", candidate.UserID));
                 command.Parameters.Add(new SqlParameter("@firstName", candidate.FirstName));
                 command.Parameters.Add(new SqlParameter("@lastName", candidate.LastName));
                 command.Parameters.Add(new SqlParameter("@birthday", candidate.Birthday));
@@ -134,11 +127,6 @@ namespace ZhetistikApp.Api.Repositories
                 command.Parameters.Add(new SqlParameter("@phoneNumber", candidate.PhoneNumber));
                 var rows = await connection.ExecuteAsync(query);
                 connection.Close();
-                //if (rows <= 0)
-                //{
-                //    return false;
-                //}
-                //return true;
             }
         }
         public async Task DeleteCandidateAsync(int id)
